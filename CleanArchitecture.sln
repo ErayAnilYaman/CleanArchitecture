@@ -19,9 +19,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CleanArchitecture.Applicati
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CleanArchitecture.AppHost", "src\CleanArchitecture.AppHost\CleanArchitecture.AppHost.csproj", "{02098C1C-7755-471A-8D86-930431A8130A}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Çözüm Öğeleri", "Çözüm Öğeleri", "{6C49D9BC-A759-4B3E-BF57-4E6A007AE7D6}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Çözüm Öğeleri", "Çözüm Öğeleri", "{469ED67E-C31A-4128-83B6-36C3C4BF7E02}"
 	ProjectSection(SolutionItems) = preProject
-		..\..\..\Downloads\README.md = ..\..\..\Downloads\README.md
+		README.md = README.md
 	EndProjectSection
 EndProject
 Global
