@@ -5,7 +5,9 @@ using Microsoft.AspNetCore.OData;
 using Microsoft.AspNetCore.RateLimiting;
 using Scalar.AspNetCore;
 using System.Threading.RateLimiting;
-
+using CleanArchitecture.WebApi.Modules;
+using CleanArchitecture.WebApi.Modules.Employees;
+using CleanArchitecture.WebApi.Error;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
@@ -34,6 +36,8 @@ builder.Services.AddRateLimiter(x=>x.AddFixedWindowLimiter("fixed" , cfg =>
     cfg.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
 }));
 
+builder.Services.AddExceptionHandler<ExceptionHandler>().AddProblemDetails();
+
 var app = builder.Build();
 
 app.MapDefaultEndpoints();
@@ -48,5 +52,11 @@ app.UseCors
     .AllowAnyMethod()
     .SetIsOriginAllowed(t=>true)
     );
+
+app.RegisterRoutes();
+
+app.UseExceptionHandler();
+
 app.MapControllers().RequireRateLimiting("fixed");
+
 app.Run();

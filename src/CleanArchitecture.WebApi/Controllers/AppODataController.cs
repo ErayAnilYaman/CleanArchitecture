@@ -27,18 +27,18 @@ namespace CleanArchitecture.WebApi.Controllers
         }
 
         [HttpGet("employees")]
-        public async Task<IActionResult> GetAllEmployees(CancellationToken cancellationToken)
+        public async Task<IQueryable<EmployeeGetAllQueryResponse>> GetAllEmployees(CancellationToken cancellationToken)
         {
             try
             {
                 var response = await sender.Send(new EmployeeGetAllQuery(), cancellationToken);
-                return Ok(response);
+                return response;
 
 
             }
             catch (Exception ex)
             {
-                return Problem("Beklenmeyen bir hata olustu!" + " " + ex.Message);
+                throw new Exception(ex.Message);
             }
         }
 

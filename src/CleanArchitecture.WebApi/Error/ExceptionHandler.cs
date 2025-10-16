@@ -1,0 +1,37 @@
+﻿using FluentValidation;
+using Mapster;
+using Microsoft.AspNetCore.Diagnostics;
+using TS.Result;
+
+namespace CleanArchitecture.WebApi.Error;
+public class ExceptionHandler : IExceptionHandler
+{
+    public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
+    {
+
+        Result<string> errorResult;
+
+        var typeException = exception.GetType();
+
+        httpContext.Response.ContentType = "application/json";
+        httpContext.Response.StatusCode = 500;
+
+        if (exception.GetType() == typeof(ValidationException)) 
+        {
+            httpContext.Response.StatusCode = 403;
+
+            errorResult = Result<string>.Failure(403, ((ValidationException)exception).Errors.Select(s => s.PropertyName).ToList());
+
+
+            await httpContext.Response.WriteAsJsonAsync(errorResult);
+
+            return true;
+
+        }
+        errorResult = Result<string>.Failure(exception.Message);
+
+        await httpContext.Response.WriteAsJsonAsync(errorResult);
+
+        return true;
+    }
+}
