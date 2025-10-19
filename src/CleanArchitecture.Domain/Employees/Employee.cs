@@ -26,7 +26,7 @@ namespace CleanArchitecture.Domain.Employees
         // Value Object
         public PersonalInformation Information { get; set; } = default!;
         // Value Object
-        public Address? Address { get; set; }
+        public Address Address { get; set; } = default!;
 
     }
 }

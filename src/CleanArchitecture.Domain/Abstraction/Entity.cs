@@ -1,23 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿
 
-namespace CleanArchitecture.Domain.Abstraction
+namespace CleanArchitecture.Domain.Abstraction;
+public abstract class Entity
 {
-    public abstract class Entity
+
+    public Entity()
     {
-
-        public Entity()
-        {
-            Id = Guid.NewGuid();    
-        }
-        public Guid Id { get; set; }
-
-        public DateTimeOffset CreatedAt { get; set; }
-        public DateTimeOffset? UpdatedAt { get; set; }
-        public bool IsDeleted { get; set; }
-        public DateTimeOffset? DeletedAt { get; set; }
+        Id = Guid.CreateVersion7();
     }
+    public Guid Id { get; set; }
+    #region AuditLog
+
+    public DateTimeOffset CreatedAt { get; set; }
+    public Guid CreatedUserId { get; set; } = default!;
+
+
+    public DateTimeOffset? UpdatedAt { get; set; }
+    public Guid? UpdatedUserId { get; set; }
+
+    public DateTimeOffset? DeletedAt { get; set; }
+    public Guid? DeletedUserId { get; set; }
+    public bool IsDeleted { get; set; }
+
+    #endregion
+
 }

@@ -1,20 +1,22 @@
 ﻿
-namespace CleanArchitecture.Infrastructure.Context;
+
 using CleanArchitecture.Domain.Abstraction;
 using CleanArchitecture.Domain.Employees;
+using CleanArchitecture.Domain.Users;
 using GenericRepository;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 #region Usings
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 #endregion
-internal sealed class ApplicationDbContext : DbContext, IUnitOfWork
+
+namespace CleanArchitecture.Infrastructure.Context;
+internal sealed class ApplicationDbContext : IdentityDbContext<AppUser , IdentityRole<Guid> , Guid>, IUnitOfWork
 {
 
     public ApplicationDbContext(DbContextOptions options) : base(options)
@@ -27,6 +29,14 @@ internal sealed class ApplicationDbContext : DbContext, IUnitOfWork
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+
+        modelBuilder.Ignore<IdentityRoleClaim<Guid>>();
+        modelBuilder.Ignore<IdentityUserClaim<Guid>>();
+        modelBuilder.Ignore<IdentityUserToken<Guid>>();
+        modelBuilder.Ignore<IdentityUserLogin<Guid>>();
+        modelBuilder.Ignore<IdentityUserRole<Guid>>();
+        modelBuilder.Ignore<IdentityRole<Guid>>();
+
     }
 
     public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
