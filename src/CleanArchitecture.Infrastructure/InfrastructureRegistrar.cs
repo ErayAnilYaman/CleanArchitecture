@@ -1,8 +1,10 @@
 ﻿using CleanArchitecture.Domain.Employees;
 using CleanArchitecture.Domain.Users;
 using CleanArchitecture.Infrastructure.Context;
+using CleanArchitecture.Infrastructure.Options;
 using CleanArchitecture.Infrastructure.Repositories;
 using GenericRepository;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -46,6 +48,16 @@ public static class InfrastructureRegistrar
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddDefaultTokenProviders();   // User Manager kullanmak icin yaziyoruz..
 
+        services.Configure<JwtOptions>(configuration.GetSection("Jwt"));
+        services.ConfigureOptions<JwtOptionsSetup>();
+
+        services.AddAuthentication(opt =>
+        {
+            opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        }).AddJwtBearer();
+
+        services.AddAuthorization();
 
 
         services.Scan(scan => scan

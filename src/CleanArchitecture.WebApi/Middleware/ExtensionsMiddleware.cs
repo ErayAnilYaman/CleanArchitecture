@@ -17,15 +17,15 @@ public static class ExtensionsMiddleware
                 {
                     UserName = "admin",
                     Email = "admin@admin.com",
-                    FirstName = "Taner",
-                    LastName = "Saydam",
+                    FirstName = "Eray",
+                    LastName = "Yaman",
                     EmailConfirmed = true,
                     CreatedAt = DateTimeOffset.Now,
                 };
 
                 user.CreatedUserId = user.Id;
 
-                userManager.CreateAsync(user, "1").Wait();
+                userManager.CreateAsync(user, "123123").Wait();
 
 
             }

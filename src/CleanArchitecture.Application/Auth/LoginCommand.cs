@@ -1,8 +1,8 @@
-﻿using CleanArchitecture.Domain.Users;
+﻿using CleanArchitecture.Application.Services;
+using CleanArchitecture.Domain.Users;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using TS.Result;
 
 namespace CleanArchitecture.Application.Auth;
@@ -20,7 +20,8 @@ public sealed record LoginCommandResponse
 
 }
 
-internal sealed class LoginCommandHandler(UserManager<AppUser> userManager , SignInManager<AppUser> signInManager) : IRequestHandler<LoginCommand, Result<LoginCommandResponse>>
+internal sealed class LoginCommandHandler(UserManager<AppUser> userManager , SignInManager<AppUser> signInManager 
+    , IJwtProvider jwtprovider) : IRequestHandler<LoginCommand, Result<LoginCommandResponse>>
 {
     public async Task<Result<LoginCommandResponse>> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
@@ -54,8 +55,10 @@ internal sealed class LoginCommandHandler(UserManager<AppUser> userManager , Sig
             return (500, "Şifreniz yanlış");
         }
 
+        var jwtToken = await jwtprovider.GetTokenAsync(user, cancellationToken); 
 
-        var response = new LoginCommandResponse { AccessToken = "" };
+
+        var response = new LoginCommandResponse { AccessToken = jwtToken };
 
         return response;
 

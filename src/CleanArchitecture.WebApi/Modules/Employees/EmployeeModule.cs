@@ -9,7 +9,7 @@ public static class EmployeeModule
     {
 
 
-        RouteGroupBuilder group = app.MapGroup("/employees").WithTags("Employees");
+        RouteGroupBuilder group = app.MapGroup("/employees").WithTags("Employees").RequireAuthorization();
 
         group.MapPost(string.Empty,
             async (ISender sender, EmployeeCreateCommand request, CancellationToken ct) =>

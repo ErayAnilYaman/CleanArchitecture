@@ -6,8 +6,9 @@ using Microsoft.AspNetCore.RateLimiting;
 using Scalar.AspNetCore;
 using System.Threading.RateLimiting;
 using CleanArchitecture.WebApi.Modules;
-using CleanArchitecture.WebApi.Modules.Employees;
 using CleanArchitecture.WebApi.Error;
+using CleanArhictecture_2025.WebAPI;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
@@ -57,6 +58,12 @@ app.RegisterRoutes();
 
 app.UseExceptionHandler();
 
-app.MapControllers().RequireRateLimiting("fixed");
+app.UseAuthentication();
+
+app.UseAuthorization();
+
+app.MapControllers().RequireRateLimiting("fixed").RequireAuthorization();
+
+ExtensionsMiddleware.CreateFirstUser(app);
 
 app.Run();
