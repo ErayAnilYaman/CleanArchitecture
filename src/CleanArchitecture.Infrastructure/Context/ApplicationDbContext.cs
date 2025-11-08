@@ -1,18 +1,15 @@
 ﻿
+#region Usings
+
 
 using CleanArchitecture.Domain.Abstraction;
 using CleanArchitecture.Domain.Employees;
 using CleanArchitecture.Domain.Users;
 using GenericRepository;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-#region Usings
-
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-
 #endregion
 
 namespace CleanArchitecture.Infrastructure.Context;
@@ -43,12 +40,19 @@ internal sealed class ApplicationDbContext : IdentityDbContext<AppUser , Identit
     {
 
         var entries = ChangeTracker.Entries<Entity>();
+        HttpContextAccessor httpContext = new();
+
+        string userIdString = httpContext.HttpContext!.User.Claims.First(f => f.Type == "user-id").Value;
+        Guid userId = Guid.Parse(userIdString);
+
 
         foreach (var entity in entries)
         {
             if (entity.State == EntityState.Added)
             {
                 entity.Property(p => p.CreatedAt).CurrentValue = DateTimeOffset.Now;
+
+                entity.Property(p => p.CreatedUserId).CurrentValue = userId;
             }
 
             if (entity.State == EntityState.Modified)
@@ -56,10 +60,12 @@ internal sealed class ApplicationDbContext : IdentityDbContext<AppUser , Identit
                 if (entity.Property(p => p.IsDeleted).CurrentValue == true)
                 {
                     entity.Property(p => p.DeletedAt).CurrentValue = DateTimeOffset.Now;
+                    entity.Property(p => p.DeletedUserId).CurrentValue = userId;
                 }
                 else
                 {
                     entity.Property(p => p.UpdatedAt).CurrentValue = DateTimeOffset.Now;
+                    entity.Property(p => p.UpdatedUserId).CurrentValue = userId;
                 }
             }
             if (entity.State == EntityState.Deleted)

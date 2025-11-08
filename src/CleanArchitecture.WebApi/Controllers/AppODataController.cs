@@ -1,10 +1,13 @@
 ﻿using CleanArchitecture.Application.Employees;
+using CleanArchitecture.Domain.Employees;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Microsoft.OData.Edm;
 using Microsoft.OData.ModelBuilder;
+using TS.Result;
 
 namespace CleanArchitecture.WebApi.Controllers
 {
@@ -38,6 +41,8 @@ namespace CleanArchitecture.WebApi.Controllers
                 throw new Exception(ex.Message);
             }
         }
+
+        
 
     }
 }

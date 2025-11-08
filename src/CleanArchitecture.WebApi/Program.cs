@@ -11,6 +11,10 @@ using CleanArhictecture_2025.WebAPI;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddResponseCompression(opt =>
+{
+    opt.EnableForHttps = true;
+});
 builder.AddServiceDefaults();
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
@@ -44,17 +48,21 @@ var app = builder.Build();
 app.MapDefaultEndpoints();
 
 
+
 app.MapOpenApi();
 app.MapScalarApiReference();
 app.UseCors
     (x=>
     x.AllowAnyHeader()
-    .AllowCredentials()
+    .AllowCredentials() 
     .AllowAnyMethod()
     .SetIsOriginAllowed(t=>true)
     );
 
 app.RegisterRoutes();
+
+app.UseHttpsRedirection();
+
 
 app.UseExceptionHandler();
 
@@ -62,8 +70,12 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
-app.MapControllers().RequireRateLimiting("fixed").RequireAuthorization();
+app.UseResponseCompression();
+
+
+app.MapControllers().RequireRateLimiting("fixed");
 
 ExtensionsMiddleware.CreateFirstUser(app);
+
 
 app.Run();

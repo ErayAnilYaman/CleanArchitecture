@@ -12,7 +12,7 @@ namespace CleanArchitecture.Domain.Employees
     using CleanArchitecture.Domain.Abstraction;
 
     #endregion
-    public sealed class Employee : EntityDto
+    public sealed class Employee : Entity
     {
         
         public string FirstName { get; set; } = default!;

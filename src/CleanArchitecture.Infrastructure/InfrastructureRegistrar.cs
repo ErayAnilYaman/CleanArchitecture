@@ -1,8 +1,10 @@
-﻿using CleanArchitecture.Domain.Employees;
+﻿using CleanArchitecture.Application.Services;
+using CleanArchitecture.Domain.Employees;
 using CleanArchitecture.Domain.Users;
 using CleanArchitecture.Infrastructure.Context;
 using CleanArchitecture.Infrastructure.Options;
 using CleanArchitecture.Infrastructure.Repositories;
+using CleanArchitecture.Infrastructure.Services;
 using GenericRepository;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -10,7 +12,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using System.Formats.Tar;
 
 namespace CleanArchitecture.Infrastructure;
 public static class InfrastructureRegistrar
@@ -28,7 +29,7 @@ public static class InfrastructureRegistrar
         // services.AddScoped<IEmployeeRepository, EmployeeRepository>();
         // burda her bir scope icin yazmak yerine scan yaptiricak ve tek tek yazilmicak bir kutuphane cagirdim.
         services.AddScoped<IUnitOfWork>(srv => srv.GetRequiredService<ApplicationDbContext>());
-
+        
         services
             .AddIdentity<AppUser , IdentityRole<Guid>>(opt =>
             {
@@ -50,6 +51,9 @@ public static class InfrastructureRegistrar
 
         services.Configure<JwtOptions>(configuration.GetSection("Jwt"));
         services.ConfigureOptions<JwtOptionsSetup>();
+
+        services.Configure<KeycloakConfiguration>(configuration.GetSection("KeycloakConfiguration"));
+        services.AddScoped<KeycloakService>();
 
         services.AddAuthentication(opt =>
         {

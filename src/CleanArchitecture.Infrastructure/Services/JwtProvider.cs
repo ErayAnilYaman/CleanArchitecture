@@ -11,7 +11,7 @@ using System.Text;
 namespace CleanArchitecture.Infrastructure.Services;
 public class JwtProvider(IOptions<JwtOptions> opt) : IJwtProvider
 {
-    public Task<string> GetTokenAsync(AppUser user, CancellationToken cancellationToken = default)
+    public Task<string> CreateTokenAsync(AppUser user, CancellationToken cancellationToken = default)
     {
         var expires = DateTime.Now.AddDays(1);
         List<Claim> claims = new()

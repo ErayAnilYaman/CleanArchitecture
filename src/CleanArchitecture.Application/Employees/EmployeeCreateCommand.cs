@@ -11,7 +11,8 @@ public sealed record EmployeeCreateCommand(
     DateOnly BirtOfDate,
     decimal Salary,
     PersonalInformation Information,
-    Address? Address
+    Address? Address,
+    bool IsActive
 
     ) : IRequest<Result<string>>;
 
